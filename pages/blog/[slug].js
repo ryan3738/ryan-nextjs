@@ -207,3 +207,16 @@ export async function getStaticPaths() {
     fallback: false,
   }
 }
+
+BlogTemplate.getInitialProps = async function(ctx) {
+  const { slug } = ctx.query
+  const content = await import(`../../posts/${slug}.md`)
+  const config = await import(`../../data/config.json`)
+  const data = matter(content.default)
+
+  return {
+    fileRelativePath: `posts/${slug}.md`,
+    title: config.title,
+    ...data,
+  }
+}
